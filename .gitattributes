@@ -1,0 +1,40 @@
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# TypeScript and JavaScript files
+*.ts text
+*.tsx text
+*.js text
+*.jsx text
+*.json text
+
+# Documentation
+*.md text diff=markdown
+*.mdx text diff=markdown
+
+# Configs
+*.yml text
+*.yaml text
+*.config.* text
+
+# Graphics
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.svg text
+
+# Fonts
+*.ttf binary
+*.eot binary
+*.woff binary
+*.woff2 binary
+
+# RC files
+.*rc text
+.env.* text
+
+# Lock files
+package-lock.json text -diff
+yarn.lock text -diff
+pnpm-lock.yaml text -diff

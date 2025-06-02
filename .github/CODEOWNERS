@@ -1,0 +1,15 @@
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence,
+# they will be requested for review when someone opens a pull request.
+* @yourusername
+
+# Frontend code
+/src/components/ @yourusername
+/src/store/ @yourusername
+/src/utils/ @yourusername
+/src/types/ @yourusername
+
+# Configuration files
+*.json @yourusername
+*.config.* @yourusername
+.github/ @yourusername

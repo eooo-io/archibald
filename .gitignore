@@ -49,3 +49,4 @@ logs
 # System Files
 .DS_Store
 Thumbs.db
+.claude.json

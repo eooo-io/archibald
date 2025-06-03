@@ -25,7 +25,6 @@ import { defaultSettings, SETTINGS_STORAGE_KEY } from '../types/Settings';
 
 const Links = [
   { name: 'Home', to: '/' },
-  { name: 'Components', to: '/components' },
 ];
 
 const NavLink = ({ children, to }: { children: React.ReactNode; to: string }) => (

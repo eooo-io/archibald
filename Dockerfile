@@ -4,7 +4,7 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY . .
 ARG TARGETARCH
 RUN echo "Building for architecture: $TARGETARCH"
@@ -14,7 +14,7 @@ RUN npm run build
 FROM node:20-alpine AS development
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY . .
 ENV NODE_ENV=development
 EXPOSE 5173

@@ -16,9 +16,12 @@ import { CloudComponentsSidebar } from '../components/CloudComponentsSidebar';
 import CloudEdge from '../components/CloudEdge';
 import DesignManager from '../components/DesignManager';
 import IsometricNode from '../components/IsometricNode';
+import PropertiesPanel from '../components/PropertiesPanel';
 import SettingsMenu from '../components/SettingsMenu';
-import type { CloudDesign, CloudDesignVersion } from '../types/CloudDesign';
+import type { CloudDesign } from '../types/CloudDesign';
 import { STORAGE_KEYS } from '../types/CloudDesign';
+import type { ElementProperties } from '../types/ElementProperties';
+import { getDefaultProperties } from '../types/ElementProperties';
 import type { CloudProviderSettings } from '../types/Settings';
 import { defaultSettings } from '../types/Settings';
 
@@ -43,7 +46,11 @@ const initialNodes: Node[] = [
   {
     id: '1',
     type: 'default',
-    data: { label: 'Internet Gateway', isometric: false },
+    data: {
+      label: 'Internet Gateway',
+      isometric: false,
+      properties: getDefaultProperties('Internet Gateway'),
+    },
     position: { x: 250, y: 25 },
   },
 ];
@@ -61,6 +68,7 @@ export const CloudArchitecture = () => {
   const [currentDesignId, setCurrentDesignId] = useState<string>();
   const [currentVersion, setCurrentVersion] = useState(1);
   const [settings, setSettings] = useState<CloudProviderSettings>(defaultSettings);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const toast = useToast();
   const bgColor = useColorModeValue('gray.50', 'gray.900');
@@ -72,12 +80,10 @@ export const CloudArchitecture = () => {
   useEffect(() => {
     if (!currentDesignId) return;
 
-    // Clear existing timer
     if (autoSaveTimerRef.current) {
       clearTimeout(autoSaveTimerRef.current);
     }
 
-    // Set new timer
     autoSaveTimerRef.current = setTimeout(() => {
       const design: CloudDesign = {
         id: currentDesignId,
@@ -90,27 +96,12 @@ export const CloudArchitecture = () => {
         isAutosaved: true,
       };
 
-      // Save design data
       localStorage.setItem(
         `${STORAGE_KEYS.DESIGN_PREFIX}${currentDesignId}`,
         JSON.stringify(design)
       );
 
-      // Save version
-      const version: CloudDesignVersion = {
-        version: currentVersion + 1,
-        nodes,
-        edges,
-        timestamp: new Date().toISOString(),
-        description: 'Auto-saved version',
-      };
-
-      localStorage.setItem(
-        `${STORAGE_KEYS.VERSION_PREFIX}${currentDesignId}-${version.version}`,
-        JSON.stringify(version)
-      );
-
-      setCurrentVersion(version.version);
+      setCurrentVersion((v) => v + 1);
 
       toast({
         title: 'Design auto-saved',
@@ -137,7 +128,6 @@ export const CloudArchitecture = () => {
       const sourceType = sourceNode.data.label;
       const targetType = targetNode.data.label;
 
-      // Check if the connection is valid
       const allowedTargets = validConnections[sourceType] || [];
       if (!allowedTargets.includes(targetType)) {
         toast({
@@ -182,7 +172,11 @@ export const CloudArchitecture = () => {
         id: Math.random().toString(),
         type: 'default',
         position,
-        data: { label: type, isometric },
+        data: {
+          label: type,
+          isometric,
+          properties: getDefaultProperties(type),
+        },
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -195,11 +189,45 @@ export const CloudArchitecture = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
+  const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
+    setSelectedNode(node);
+  }, []);
+
+  const onPaneClick = useCallback(() => {
+    setSelectedNode(null);
+  }, []);
+
+  const handleUpdateProperties = useCallback((nodeId: string, properties: ElementProperties) => {
+    setNodes((nds) =>
+      nds.map((node) =>
+        node.id === nodeId
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                properties,
+              },
+            }
+          : node
+      )
+    );
+  }, [setNodes]);
+
   const handleLoadDesign = useCallback((design: CloudDesign) => {
-    setNodes(design.nodes);
+    // Ensure all nodes have properties
+    const nodesWithProperties = design.nodes.map(node => ({
+      ...node,
+      data: {
+        ...node.data,
+        properties: node.data.properties || getDefaultProperties(node.data.label),
+      },
+    }));
+
+    setNodes(nodesWithProperties);
     setEdges(design.edges);
     setCurrentDesignId(design.id);
     setCurrentVersion(design.version);
+    setSelectedNode(null);
   }, [setNodes, setEdges]);
 
   // Update all nodes with isometric prop
@@ -255,6 +283,8 @@ export const CloudArchitecture = () => {
             onConnect={onConnect}
             onDrop={onDrop}
             onDragOver={onDragOver}
+            onNodeClick={onNodeClick}
+            onPaneClick={onPaneClick}
             fitView
             style={flowStyles}
           >
@@ -263,6 +293,10 @@ export const CloudArchitecture = () => {
             <MiniMap />
           </ReactFlow>
         </Box>
+        <PropertiesPanel
+          selectedNode={selectedNode}
+          onUpdateProperties={handleUpdateProperties}
+        />
       </Box>
     </Box>
   );

@@ -9,38 +9,38 @@ import {
 } from "./chunk-XJPKZAQV.js";
 
 // node_modules/vitepress/dist/client/theme-default/index.js
-import "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/styles/fonts.css";
+import "/app/node_modules/vitepress/dist/client/theme-default/styles/fonts.css";
 
 // node_modules/vitepress/dist/client/theme-default/without-fonts.js
-import "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/styles/vars.css";
-import "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/styles/base.css";
-import "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/styles/icons.css";
-import "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/styles/utils.css";
-import "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/styles/components/custom-block.css";
-import "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/styles/components/vp-code.css";
-import "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/styles/components/vp-code-group.css";
-import "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/styles/components/vp-doc.css";
-import "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/styles/components/vp-sponsor.css";
-import VPBadge from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPBadge.vue";
-import Layout from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/Layout.vue";
-import { default as default2 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPBadge.vue";
-import { default as default3 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPButton.vue";
-import { default as default4 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPDocAsideSponsors.vue";
-import { default as default5 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPFeatures.vue";
-import { default as default6 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPHomeContent.vue";
-import { default as default7 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPHomeFeatures.vue";
-import { default as default8 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPHomeHero.vue";
-import { default as default9 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPHomeSponsors.vue";
-import { default as default10 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPImage.vue";
-import { default as default11 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPLink.vue";
-import { default as default12 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPNavBarSearch.vue";
-import { default as default13 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPSocialLink.vue";
-import { default as default14 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPSocialLinks.vue";
-import { default as default15 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPSponsors.vue";
-import { default as default16 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPTeamMembers.vue";
-import { default as default17 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPTeamPage.vue";
-import { default as default18 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPTeamPageSection.vue";
-import { default as default19 } from "/Users/ezraterlinden/Projects/Personal/eooo-io/achibald/docs/node_modules/vitepress/dist/client/theme-default/components/VPTeamPageTitle.vue";
+import "/app/node_modules/vitepress/dist/client/theme-default/styles/vars.css";
+import "/app/node_modules/vitepress/dist/client/theme-default/styles/base.css";
+import "/app/node_modules/vitepress/dist/client/theme-default/styles/icons.css";
+import "/app/node_modules/vitepress/dist/client/theme-default/styles/utils.css";
+import "/app/node_modules/vitepress/dist/client/theme-default/styles/components/custom-block.css";
+import "/app/node_modules/vitepress/dist/client/theme-default/styles/components/vp-code.css";
+import "/app/node_modules/vitepress/dist/client/theme-default/styles/components/vp-code-group.css";
+import "/app/node_modules/vitepress/dist/client/theme-default/styles/components/vp-doc.css";
+import "/app/node_modules/vitepress/dist/client/theme-default/styles/components/vp-sponsor.css";
+import VPBadge from "/app/node_modules/vitepress/dist/client/theme-default/components/VPBadge.vue";
+import Layout from "/app/node_modules/vitepress/dist/client/theme-default/Layout.vue";
+import { default as default2 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPBadge.vue";
+import { default as default3 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPButton.vue";
+import { default as default4 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPDocAsideSponsors.vue";
+import { default as default5 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPFeatures.vue";
+import { default as default6 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPHomeContent.vue";
+import { default as default7 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPHomeFeatures.vue";
+import { default as default8 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPHomeHero.vue";
+import { default as default9 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPHomeSponsors.vue";
+import { default as default10 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPImage.vue";
+import { default as default11 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPLink.vue";
+import { default as default12 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPNavBarSearch.vue";
+import { default as default13 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPSocialLink.vue";
+import { default as default14 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPSocialLinks.vue";
+import { default as default15 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPSponsors.vue";
+import { default as default16 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPTeamMembers.vue";
+import { default as default17 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPTeamPage.vue";
+import { default as default18 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPTeamPageSection.vue";
+import { default as default19 } from "/app/node_modules/vitepress/dist/client/theme-default/components/VPTeamPageTitle.vue";
 
 // node_modules/vitepress/dist/client/theme-default/composables/local-nav.js
 import { onContentUpdated } from "vitepress";

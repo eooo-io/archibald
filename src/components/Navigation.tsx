@@ -24,24 +24,49 @@ import type { CloudProviderSettings } from '../types/Settings';
 import { defaultSettings, SETTINGS_STORAGE_KEY } from '../types/Settings';
 
 const Links = [
-  { name: 'Home', to: '/' },
+  { name: 'Editor', to: '/editor' },
 ];
 
-const NavLink = ({ children, to }: { children: React.ReactNode; to: string }) => (
-  <Link
-    as={RouterLink}
-    to={to}
-    px={2}
-    py={1}
-    rounded={'md'}
-    _hover={{
-      textDecoration: 'none',
-      bg: useColorModeValue('gray.200', 'gray.700'),
-    }}
-  >
-    {children}
-  </Link>
-);
+// External links for documentation
+const ExternalLinks = [
+  { name: 'Guide', href: 'http://localhost:5174' },
+];
+
+const NavLink = ({ children, to, href }: { children: React.ReactNode; to?: string; href?: string }) => {
+  const hoverBg = useColorModeValue('gray.200', 'gray.700');
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        px={2}
+        py={1}
+        rounded={'md'}
+        _hover={{
+          textDecoration: 'none',
+          bg: hoverBg,
+        }}
+      >
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <Link
+      as={RouterLink}
+      to={to!}
+      px={2}
+      py={1}
+      rounded={'md'}
+      _hover={{
+        textDecoration: 'none',
+        bg: hoverBg,
+      }}
+    >
+      {children}
+    </Link>
+  );
+};
 
 export const Navigation = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -71,6 +96,8 @@ export const Navigation = () => {
     };
     setSettings(newSettings);
     localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(newSettings));
+    // Dispatch a custom event for the sidebar to listen to
+    window.dispatchEvent(new CustomEvent('settingsChanged', { detail: newSettings }));
   }, [settings]);
 
   return (
@@ -108,7 +135,7 @@ export const Navigation = () => {
                   bg: useColorModeValue('gray.200', 'gray.700'),
                 }}
               >
-                Providers
+                Cloud Providers
               </MenuButton>
               <MenuList bg={menuBg} borderColor={borderColor}>
                 <MenuItem closeOnSelect={false} _hover={{ bg: menuHoverBg }}>
@@ -154,6 +181,11 @@ export const Navigation = () => {
                 </MenuItem>
               </MenuList>
             </Menu>
+            {ExternalLinks.map((link) => (
+              <NavLink key={link.name} href={link.href}>
+                {link.name}
+              </NavLink>
+            ))}
           </HStack>
         </HStack>
 

@@ -3,11 +3,12 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Achibald",
   description: "Cloud Architecture Diagram Editor",
+  base: '/',
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Guide', link: '/guide/' },
-      { text: 'Providers', link: '/providers/' }
+      { text: 'Guide', link: '/guide/introduction' },
+      { text: 'Editor', link: 'http://localhost:5173/editor' }
     ],
     sidebar: {
       '/guide/': [
@@ -25,21 +26,10 @@ export default defineConfig({
             { text: 'Cloud Providers', link: '/guide/cloud-providers' },
           ]
         }
-      ],
-      '/providers/': [
-        {
-          text: 'Cloud Providers',
-          items: [
-            { text: 'AWS', link: '/providers/aws' },
-            { text: 'Azure', link: '/providers/azure' },
-            { text: 'GCP', link: '/providers/gcp' },
-            { text: 'OpenShift', link: '/providers/openshift' },
-          ]
-        }
       ]
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/eooo-io/achibald' }
+      { icon: 'github', link: 'https://github.com/eooo-io/archibald' }
     ]
   }
 })

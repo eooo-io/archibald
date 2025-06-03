@@ -9,7 +9,7 @@ import {
     useColorModeValue,
     VStack,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { IconType } from 'react-icons';
 import { FaAws, FaCloud, FaDatabase } from 'react-icons/fa';
 import {
@@ -34,6 +34,8 @@ import {
     MdWebAsset
 } from 'react-icons/md';
 import { SiGooglecloud, SiRedhatopenshift } from 'react-icons/si';
+import type { CloudProviderSettings } from '../types/Settings';
+import { defaultSettings, SETTINGS_STORAGE_KEY } from '../types/Settings';
 
 type AWSService =
     | 'EC2 Instance'
@@ -208,6 +210,22 @@ export const CloudComponentsSidebar: React.FC = () => {
     const itemHoverBgColor = useColorModeValue('gray.100', 'gray.600');
     const accordionBg = useColorModeValue('gray.50', 'gray.700');
     const iconColor = useColorModeValue('blue.500', 'blue.200');
+    const [settings, setSettings] = useState<CloudProviderSettings>(defaultSettings);
+
+    useEffect(() => {
+        const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+        if (savedSettings) {
+            setSettings(JSON.parse(savedSettings));
+        }
+
+        // Listen for settings changes from the navigation menu
+        const handleSettingsChange = (e: CustomEvent<CloudProviderSettings>) => {
+            setSettings(e.detail);
+        };
+
+        window.addEventListener('settingsChanged', handleSettingsChange as EventListener);
+        return () => window.removeEventListener('settingsChanged', handleSettingsChange as EventListener);
+    }, []);
 
     const onDragStart = (event: React.DragEvent<HTMLDivElement>, nodeType: string) => {
         event.dataTransfer.setData('application/reactflow', nodeType);
@@ -266,45 +284,51 @@ export const CloudComponentsSidebar: React.FC = () => {
             }}
         >
             <Accordion allowMultiple defaultIndex={[0]}>
-                {Object.entries(cloudProviders).map(([provider, { icon: ProviderIcon, services }]) => (
-                    <AccordionItem key={provider} border="0">
-                        <AccordionButton
-                            py={2}
-                            _hover={{ bg: accordionBg }}
-                            _expanded={{ bg: accordionBg }}
-                        >
-                            <Box flex="1" display="flex" alignItems="center">
-                                <Icon as={ProviderIcon} boxSize={5} mr={2} color={iconColor} />
-                                {provider}
-                            </Box>
-                            <AccordionIcon />
-                        </AccordionButton>
-                        <AccordionPanel pb={4} px={2}>
-                            <Accordion allowMultiple>
-                                {Object.entries(services).map(([category, items]) => (
-                                    <AccordionItem key={category} border="0">
-                                        <AccordionButton
-                                            py={2}
-                                            _hover={{ bg: accordionBg }}
-                                            _expanded={{ bg: accordionBg }}
-                                        >
-                                            <Box flex="1" textAlign="left" display="flex" alignItems="center">
-                                                <Icon as={categoryIcons[category as ServiceCategory]} boxSize={4} mr={2} color={iconColor} />
-                                                {category}
-                                            </Box>
-                                            <AccordionIcon />
-                                        </AccordionButton>
-                                        <AccordionPanel pb={2}>
-                                            <VStack spacing={2} align="stretch">
-                                                {items.map((service) => renderServiceItem(service, provider))}
-                                            </VStack>
-                                        </AccordionPanel>
-                                    </AccordionItem>
-                                ))}
-                            </Accordion>
-                        </AccordionPanel>
-                    </AccordionItem>
-                ))}
+                {Object.entries(cloudProviders).map(([provider, { icon: ProviderIcon, services }]) => {
+                    // Skip providers that are disabled in settings
+                    const providerKey = provider.toLowerCase() as keyof CloudProviderSettings;
+                    if (!settings[providerKey]) return null;
+
+                    return (
+                        <AccordionItem key={provider} border="0">
+                            <AccordionButton
+                                py={2}
+                                _hover={{ bg: accordionBg }}
+                                _expanded={{ bg: accordionBg }}
+                            >
+                                <Box flex="1" display="flex" alignItems="center">
+                                    <Icon as={ProviderIcon} boxSize={5} mr={2} color={iconColor} />
+                                    {provider}
+                                </Box>
+                                <AccordionIcon />
+                            </AccordionButton>
+                            <AccordionPanel pb={4} px={2}>
+                                <Accordion allowMultiple>
+                                    {Object.entries(services).map(([category, items]) => (
+                                        <AccordionItem key={category} border="0">
+                                            <AccordionButton
+                                                py={2}
+                                                _hover={{ bg: accordionBg }}
+                                                _expanded={{ bg: accordionBg }}
+                                            >
+                                                <Box flex="1" textAlign="left" display="flex" alignItems="center">
+                                                    <Icon as={categoryIcons[category as ServiceCategory]} boxSize={4} mr={2} color={iconColor} />
+                                                    {category}
+                                                </Box>
+                                                <AccordionIcon />
+                                            </AccordionButton>
+                                            <AccordionPanel pb={2}>
+                                                <VStack spacing={2} align="stretch">
+                                                    {items.map((service) => renderServiceItem(service, provider))}
+                                                </VStack>
+                                            </AccordionPanel>
+                                        </AccordionItem>
+                                    ))}
+                                </Accordion>
+                            </AccordionPanel>
+                        </AccordionItem>
+                    );
+                })}
             </Accordion>
         </Box>
     );

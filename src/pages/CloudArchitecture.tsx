@@ -30,6 +30,16 @@ const edgeTypes = {
   default: CloudEdge,
 };
 
+const flowStyles = {
+  background: 'transparent',
+};
+
+const defaultViewport = {
+  x: 0,
+  y: 0,
+  zoom: 1,
+};
+
 // Define valid connections between different AWS services
 const validConnections: Record<string, string[]> = {
   'EC2 Instance': [
@@ -308,12 +318,6 @@ const initialEdges: Edge[] = [
   },
 ];
 
-const flowStyles = {
-  background: 'transparent',
-};
-
-const defaultViewport = { x: 0, y: 0, zoom: 1 };
-
 export const CloudArchitecture = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -489,7 +493,7 @@ export const CloudArchitecture = () => {
   }));
 
   return (
-    <Box display="flex" flexDir="column" h="calc(100vh - 100px)" bg={bgColor}>
+    <Box display="flex" flexDir="column" h="100%" bg={bgColor}>
       <Box display="flex" flex="1" position="relative">
         <Box width="250px" borderRight="1px solid" borderColor="gray.200">
           <Box p={4} borderBottom="1px solid" borderColor="gray.200">

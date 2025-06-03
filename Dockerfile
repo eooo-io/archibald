@@ -17,8 +17,9 @@ COPY package*.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
 ENV NODE_ENV=development
+ENV VITE_BASE_URL=/
 EXPOSE 5173
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["npm", "run", "dev", "--", "--host", "--port", "5173"]
 
 # Production stage
 FROM node:20-alpine AS production

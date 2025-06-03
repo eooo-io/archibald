@@ -35,31 +35,173 @@ const edgeTypes = {
 
 // Define valid connections between different AWS services
 const validConnections: Record<string, string[]> = {
-  'EC2 Instance': ['RDS Database', 'S3 Bucket', 'Security Group'],
+  'EC2 Instance': ['RDS Database', 'S3 Bucket', 'Security Group', 'Internet Gateway'],
   'RDS Database': ['Security Group'],
-  'VPC': ['EC2 Instance', 'RDS Database', 'Security Group'],
+  'VPC': ['EC2 Instance', 'RDS Database', 'Security Group', 'Internet Gateway'],
   'Security Group': ['EC2 Instance', 'RDS Database'],
   'S3 Bucket': ['EC2 Instance'],
+  'Internet Gateway': ['EC2 Instance', 'VPC'],
 };
 
 const initialNodes: Node[] = [
   {
-    id: '1',
+    id: 'vpc-1',
+    type: 'default',
+    data: {
+      label: 'VPC',
+      isometric: false,
+      properties: getDefaultProperties('VPC'),
+    },
+    position: { x: 400, y: 200 },
+  },
+  {
+    id: 'igw-1',
     type: 'default',
     data: {
       label: 'Internet Gateway',
       isometric: false,
       properties: getDefaultProperties('Internet Gateway'),
     },
-    position: { x: 250, y: 25 },
+    position: { x: 400, y: 50 },
+  },
+  {
+    id: 'web-sg',
+    type: 'default',
+    data: {
+      label: 'Security Group',
+      isometric: false,
+      properties: getDefaultProperties('Security Group'),
+    },
+    position: { x: 200, y: 200 },
+  },
+  {
+    id: 'db-sg',
+    type: 'default',
+    data: {
+      label: 'Security Group',
+      isometric: false,
+      properties: getDefaultProperties('Security Group'),
+    },
+    position: { x: 600, y: 200 },
+  },
+  {
+    id: 'web-1',
+    type: 'default',
+    data: {
+      label: 'EC2 Instance',
+      isometric: false,
+      properties: getDefaultProperties('EC2 Instance'),
+    },
+    position: { x: 200, y: 350 },
+  },
+  {
+    id: 'web-2',
+    type: 'default',
+    data: {
+      label: 'EC2 Instance',
+      isometric: false,
+      properties: getDefaultProperties('EC2 Instance'),
+    },
+    position: { x: 400, y: 350 },
+  },
+  {
+    id: 'db-1',
+    type: 'default',
+    data: {
+      label: 'RDS Database',
+      isometric: false,
+      properties: getDefaultProperties('RDS Database'),
+    },
+    position: { x: 600, y: 350 },
+  },
+  {
+    id: 'storage-1',
+    type: 'default',
+    data: {
+      label: 'S3 Bucket',
+      isometric: false,
+      properties: getDefaultProperties('S3 Bucket'),
+    },
+    position: { x: 300, y: 500 },
   },
 ];
 
-const initialEdges: Edge[] = [];
+const initialEdges: Edge[] = [
+  // VPC connections
+  {
+    id: 'vpc-igw',
+    source: 'vpc-1',
+    target: 'igw-1',
+    type: 'default',
+    markerEnd: { type: MarkerType.ArrowClosed },
+    animated: true,
+  },
+  // Security group connections
+  {
+    id: 'web-sg-web1',
+    source: 'web-sg',
+    target: 'web-1',
+    type: 'default',
+    markerEnd: { type: MarkerType.ArrowClosed },
+    animated: true,
+  },
+  {
+    id: 'web-sg-web2',
+    source: 'web-sg',
+    target: 'web-2',
+    type: 'default',
+    markerEnd: { type: MarkerType.ArrowClosed },
+    animated: true,
+  },
+  {
+    id: 'db-sg-db1',
+    source: 'db-sg',
+    target: 'db-1',
+    type: 'default',
+    markerEnd: { type: MarkerType.ArrowClosed },
+    animated: true,
+  },
+  // Web to DB connections
+  {
+    id: 'web1-db',
+    source: 'web-1',
+    target: 'db-1',
+    type: 'default',
+    markerEnd: { type: MarkerType.ArrowClosed },
+    animated: true,
+  },
+  {
+    id: 'web2-db',
+    source: 'web-2',
+    target: 'db-1',
+    type: 'default',
+    markerEnd: { type: MarkerType.ArrowClosed },
+    animated: true,
+  },
+  // Storage connections
+  {
+    id: 'web1-s3',
+    source: 'web-1',
+    target: 'storage-1',
+    type: 'default',
+    markerEnd: { type: MarkerType.ArrowClosed },
+    animated: true,
+  },
+  {
+    id: 'web2-s3',
+    source: 'web-2',
+    target: 'storage-1',
+    type: 'default',
+    markerEnd: { type: MarkerType.ArrowClosed },
+    animated: true,
+  },
+];
 
 const flowStyles = {
   background: 'transparent',
 };
+
+const defaultViewport = { x: 0, y: 0, zoom: 1 };
 
 export const CloudArchitecture = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -287,6 +429,17 @@ export const CloudArchitecture = () => {
             onPaneClick={onPaneClick}
             fitView
             style={flowStyles}
+            defaultViewport={defaultViewport}
+            proOptions={{ hideAttribution: true }}
+            nodesDraggable={true}
+            nodesConnectable={true}
+            elementsSelectable={true}
+            deleteKeyCode="Delete"
+            selectionKeyCode="Shift"
+            multiSelectionKeyCode="Control"
+            zoomActivationKeyCode="Meta"
+            panActivationKeyCode="Space"
+            className="react-flow-no-node-borders"
           >
             <Background gap={16} size={1} />
             <Controls />

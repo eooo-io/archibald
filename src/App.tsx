@@ -1,22 +1,24 @@
-import { ChakraProvider } from '@chakra-ui/react';
-import { useEffect } from 'react';
-import ComponentPalette from './components/ComponentPalette';
-import DiagramCanvas from './components/DiagramCanvas';
-import { useDiagramStore } from './store/diagramStore';
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import Navigation from './components/Navigation';
+import CloudArchitecture from './pages/CloudArchitecture';
+import theme from './theme';
 
 function App() {
-  const { createDiagram } = useDiagramStore();
-
-  useEffect(() => {
-    // Create an initial empty diagram
-    createDiagram('New Diagram');
-  }, [createDiagram]);
-
   return (
-    <ChakraProvider>
-      <ComponentPalette />
-      <DiagramCanvas />
-    </ChakraProvider>
+    <>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+      <ChakraProvider theme={theme}>
+        <Router>
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<CloudArchitecture />} />
+            <Route path="/components" element={<div>Components Page</div>} />
+            <Route path="/settings" element={<div>Settings Page</div>} />
+          </Routes>
+        </Router>
+      </ChakraProvider>
+    </>
   );
 }
 

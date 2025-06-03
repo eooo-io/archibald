@@ -30,6 +30,53 @@ Archibald is an open-source cloud architecture visualization tool that helps you
 
 ### Quick Start with Docker
 
+You can either build the images locally or pull them directly from DockerHub:
+
+#### Using Pre-built Images
+
+The following images are available on DockerHub:
+
+Development images (with hot-reloading):
+```bash
+# For AMD64/x86_64 systems
+docker pull eooo/archibald:development-amd64-latest
+
+# For ARM64/aarch64 systems (e.g. Apple Silicon)
+docker pull eooo/archibald:development-arm64-latest
+```
+
+Production images (optimized, smaller size):
+```bash
+# For AMD64/x86_64 systems
+docker pull eooo/archibald:amd64-latest
+
+# For ARM64/aarch64 systems (e.g. Apple Silicon)
+docker pull eooo/archibald:arm64-latest
+```
+
+To run the development image:
+```bash
+# For AMD64/x86_64 systems
+docker run -p 5173:5173 eooo/archibald:development-amd64-latest
+
+# For ARM64/aarch64 systems
+docker run -p 5173:5173 eooo/archibald:development-arm64-latest
+```
+
+To run the production image:
+```bash
+# For AMD64/x86_64 systems
+docker run -p 3000:3000 eooo/archibald:amd64-latest
+
+# For ARM64/aarch64 systems
+docker run -p 3000:3000 eooo/archibald:arm64-latest
+```
+
+The development server will be available at http://localhost:5173
+The production server will be available at http://localhost:3000
+
+#### Building Locally
+
 1. Clone the repository:
 ```bash
 git clone https://github.com/yourusername/archibald.git

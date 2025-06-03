@@ -1,19 +1,15 @@
-import { CloudProvider } from '../types/providers';
+import type { CloudProvider } from '../types/providers';
+import { awsProvider } from './aws';
 
 // Provider registrations will be imported here
-import { AWSProvider } from './aws';
-import { AzureProvider } from './azure';
-import { GCPProvider } from './gcp';
-import { OpenShiftProvider } from './openshift';
+
+export const providers: Record<string, CloudProvider> = {
+  aws: awsProvider,
+};
 
 export const availableProviders: CloudProvider[] = [
-  AWSProvider,
-  GCPProvider,
-  AzureProvider,
-  OpenShiftProvider,
+  awsProvider,
 ];
 
 export * from './aws';
-export * from './azure';
-export * from './gcp';
-export * from './openshift';
+

@@ -1,8 +1,6 @@
-import type { ComponentType } from 'react';
 
 export interface ResourceProps {
   id: string;
-  type: string;
   config: Record<string, unknown>;
 }
 
@@ -12,29 +10,14 @@ export interface ResourceType {
   category: string;
   description: string;
   icon: string;
-  component: ComponentType<ResourceProps>;
+  component: React.FC<ResourceProps>;
 }
 
 export interface CloudProvider {
   id: string;
   name: string;
   description: string;
-  icon: string;
-  version: string;
-  categories: {
-    id: string;
-    name: string;
-    resources: ResourceType[];
-  }[];
-  resourceTypes: ResourceType[];
-  defaultRegion?: string;
-  regions?: {
-    id: string;
-    name: string;
-    location: string;
-  }[];
-  validateCredentials: (credentials: ProviderCredentials) => Promise<boolean>;
-  getResourcePrice?: (resourceType: string, config: Record<string, unknown>) => Promise<number>;
+  resources: ResourceType[];
 }
 
 export interface ProviderCredentials {

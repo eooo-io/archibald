@@ -1,12 +1,5 @@
 version: "3.8"
 
-x-volume-helper: &volume-helper
-  driver: local
-  driver_opts:
-    type: none
-    device: ${HOME}/.docker/archibald
-    o: bind
-
 services:
   app:
     build:
@@ -50,15 +43,7 @@ services:
 
 volumes:
   app_node_modules:
-    <<: *volume-helper
-    name: archibald_app_node_modules
-    driver_opts:
-      device: ${HOME}/.docker/archibald/app_node_modules
   app_cache:
-    <<: *volume-helper
-    name: archibald_app_cache
-    driver_opts:
-      device: ${HOME}/.docker/archibald/app_cache
 
 # Add more services here as needed (e.g., mock API, database, etc.)
 

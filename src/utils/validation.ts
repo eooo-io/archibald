@@ -1,4 +1,4 @@
-import type { EC2Properties, ElementProperties, RDSProperties, S3Properties, VPCProperties } from '../types/ElementProperties';
+import type { APIGatewayProperties, AutoScalingGroupProperties, DynamoDBProperties, EC2Properties, EFSProperties, ElastiCacheProperties, ElementProperties, LambdaProperties, RDSProperties, Route53Properties, S3Properties, SNSProperties, SQSProperties, SubnetProperties, VPCProperties } from '../types/ElementProperties';
 
 // IP address validation
 export const isValidIPv4 = (ip: string): boolean => {
@@ -96,10 +96,47 @@ export const validateProperties = (elementType: string, properties: ElementPrope
       }
       break;
     }
+    case 'Auto Scaling Group': {
+      const props = properties as AutoScalingGroupProperties;
+      if (props.minSize && props.minSize < 0) {
+        errors.push('Minimum size cannot be negative');
+      }
+      if (props.maxSize && props.maxSize < props.minSize!) {
+        errors.push('Maximum size must be greater than minimum size');
+      }
+      if (props.desiredCapacity && (props.desiredCapacity < props.minSize! || props.desiredCapacity > props.maxSize!)) {
+        errors.push('Desired capacity must be between minimum and maximum size');
+      }
+      break;
+    }
+    case 'Lambda Function': {
+      const props = properties as LambdaProperties;
+      if (props.memorySize && (props.memorySize < 128 || props.memorySize > 10240)) {
+        errors.push('Memory size must be between 128MB and 10240MB');
+      }
+      if (props.timeout && (props.timeout < 1 || props.timeout > 900)) {
+        errors.push('Timeout must be between 1 and 900 seconds');
+      }
+      break;
+    }
     case 'VPC': {
       const props = properties as VPCProperties;
       if (props.cidrBlock && !isValidCIDR(props.cidrBlock)) {
         errors.push('Invalid CIDR block');
+      }
+      break;
+    }
+    case 'Subnet': {
+      const props = properties as SubnetProperties;
+      if (props.cidrBlock && !isValidCIDR(props.cidrBlock)) {
+        errors.push('Invalid CIDR block');
+      }
+      break;
+    }
+    case 'Route 53': {
+      const props = properties as Route53Properties;
+      if (props.ttl && props.ttl < 0) {
+        errors.push('TTL cannot be negative');
       }
       break;
     }
@@ -113,6 +150,26 @@ export const validateProperties = (elementType: string, properties: ElementPrope
       }
       break;
     }
+    case 'DynamoDB Table': {
+      const props = properties as DynamoDBProperties;
+      if (props.readCapacity && props.readCapacity < 0) {
+        errors.push('Read capacity cannot be negative');
+      }
+      if (props.writeCapacity && props.writeCapacity < 0) {
+        errors.push('Write capacity cannot be negative');
+      }
+      break;
+    }
+    case 'ElastiCache Cluster': {
+      const props = properties as ElastiCacheProperties;
+      if (props.port && !isValidPort(props.port)) {
+        errors.push('Invalid port number');
+      }
+      if (props.numNodes && props.numNodes < 1) {
+        errors.push('Number of nodes must be at least 1');
+      }
+      break;
+    }
     case 'S3 Bucket': {
       const props = properties as S3Properties;
       if (props.bucketName && !isValidBucketName(props.bucketName)) {
@@ -120,7 +177,50 @@ export const validateProperties = (elementType: string, properties: ElementPrope
       }
       break;
     }
+    case 'EFS File System': {
+      const props = properties as EFSProperties;
+      if (props.provisionedThroughput && props.provisionedThroughput < 0) {
+        errors.push('Provisioned throughput cannot be negative');
+      }
+      break;
+    }
+    case 'SQS Queue': {
+      const props = properties as SQSProperties;
+      if (props.delaySeconds && (props.delaySeconds < 0 || props.delaySeconds > 900)) {
+        errors.push('Delay seconds must be between 0 and 900');
+      }
+      if (props.retentionPeriod && (props.retentionPeriod < 60 || props.retentionPeriod > 1209600)) {
+        errors.push('Retention period must be between 60 seconds and 14 days');
+      }
+      if (props.visibilityTimeout && (props.visibilityTimeout < 0 || props.visibilityTimeout > 43200)) {
+        errors.push('Visibility timeout must be between 0 and 12 hours');
+      }
+      break;
+    }
+    case 'SNS Topic': {
+      const props = properties as SNSProperties;
+      if (props.topicName && !isValidTopicName(props.topicName)) {
+        errors.push('Invalid topic name');
+      }
+      break;
+    }
+    case 'API Gateway': {
+      const props = properties as APIGatewayProperties;
+      if (props.stages && props.stages.some(stage => !isValidStageName(stage))) {
+        errors.push('Invalid stage name');
+      }
+      break;
+    }
   }
 
   return errors;
+};
+
+// Additional validation functions
+const isValidTopicName = (name: string): boolean => {
+  return /^[a-zA-Z0-9-_]{1,256}$/.test(name);
+};
+
+const isValidStageName = (name: string): boolean => {
+  return /^[a-zA-Z0-9-_]{1,128}$/.test(name);
 };

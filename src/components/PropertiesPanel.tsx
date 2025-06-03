@@ -20,12 +20,25 @@ import { useCallback, useEffect, useState } from 'react';
 import { FaCopy, FaInfoCircle } from 'react-icons/fa';
 import type { Node } from 'reactflow';
 import type {
+    APIGatewayProperties,
+    AutoScalingGroupProperties,
+    DynamoDBProperties,
     EC2Properties,
+    EFSProperties,
+    ElastiCacheProperties,
     ElementProperties,
+    IAMRoleProperties,
     InternetGatewayProperties,
+    KMSKeyProperties,
+    LambdaProperties,
+    LoadBalancerProperties,
     RDSProperties,
+    Route53Properties,
     S3Properties,
     SecurityGroupProperties,
+    SNSProperties,
+    SQSProperties,
+    SubnetProperties,
     VPCProperties,
 } from '../types/ElementProperties';
 import type { SecurityGroupRule } from '../utils/validation';
@@ -570,20 +583,575 @@ export const PropertiesPanel = ({ selectedNode, onUpdateProperties }: Properties
     </VStack>
   );
 
+  const renderAutoScalingGroupProperties = (props: AutoScalingGroupProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Instance Type</FormLabel>
+        <Input
+          value={props.instanceType}
+          onChange={(e) => handlePropertyChange('instanceType', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Minimum Size</FormLabel>
+        <NumberInput
+          value={props.minSize}
+          onChange={(_, value) => handlePropertyChange('minSize', value)}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Maximum Size</FormLabel>
+        <NumberInput
+          value={props.maxSize}
+          onChange={(_, value) => handlePropertyChange('maxSize', value)}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Desired Capacity</FormLabel>
+        <NumberInput
+          value={props.desiredCapacity}
+          onChange={(_, value) => handlePropertyChange('desiredCapacity', value)}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+    </VStack>
+  );
+
+  const renderLambdaProperties = (props: LambdaProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>Function Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Runtime</FormLabel>
+        <Select
+          value={props.runtime}
+          onChange={(e) => handlePropertyChange('runtime', e.target.value)}
+        >
+          <option value="nodejs18.x">Node.js 18.x</option>
+          <option value="nodejs16.x">Node.js 16.x</option>
+          <option value="python3.9">Python 3.9</option>
+          <option value="python3.8">Python 3.8</option>
+          <option value="java11">Java 11</option>
+          <option value="dotnet6">.NET 6</option>
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Memory (MB)</FormLabel>
+        <NumberInput
+          value={props.memorySize}
+          onChange={(_, value) => handlePropertyChange('memorySize', value)}
+          min={128}
+          max={10240}
+          step={64}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Timeout (seconds)</FormLabel>
+        <NumberInput
+          value={props.timeout}
+          onChange={(_, value) => handlePropertyChange('timeout', value)}
+          min={1}
+          max={900}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Handler</FormLabel>
+        <Input
+          value={props.handler}
+          onChange={(e) => handlePropertyChange('handler', e.target.value)}
+          placeholder="index.handler"
+        />
+      </FormControl>
+    </VStack>
+  );
+
+  const renderDynamoDBProperties = (props: DynamoDBProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>Table Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Partition Key</FormLabel>
+        <Input
+          value={props.partitionKey}
+          onChange={(e) => handlePropertyChange('partitionKey', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Sort Key</FormLabel>
+        <Input
+          value={props.sortKey}
+          onChange={(e) => handlePropertyChange('sortKey', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Read Capacity Units</FormLabel>
+        <NumberInput
+          value={props.readCapacity}
+          onChange={(_, value) => handlePropertyChange('readCapacity', value)}
+          min={1}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Write Capacity Units</FormLabel>
+        <NumberInput
+          value={props.writeCapacity}
+          onChange={(_, value) => handlePropertyChange('writeCapacity', value)}
+          min={1}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+    </VStack>
+  );
+
+  const renderElastiCacheProperties = (props: ElastiCacheProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>Cluster Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Engine</FormLabel>
+        <Select
+          value={props.engine}
+          onChange={(e) => handlePropertyChange('engine', e.target.value)}
+        >
+          <option value="redis">Redis</option>
+          <option value="memcached">Memcached</option>
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Node Type</FormLabel>
+        <Input
+          value={props.nodeType}
+          onChange={(e) => handlePropertyChange('nodeType', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Number of Nodes</FormLabel>
+        <NumberInput
+          value={props.numNodes}
+          onChange={(_, value) => handlePropertyChange('numNodes', value)}
+          min={1}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Port</FormLabel>
+        <NumberInput
+          value={props.port}
+          onChange={(_, value) => handlePropertyChange('port', value)}
+          min={1024}
+          max={65535}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+    </VStack>
+  );
+
+  const renderSubnetProperties = (props: SubnetProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>Subnet Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>CIDR Block</FormLabel>
+        <Input
+          value={props.cidrBlock}
+          onChange={(e) => handlePropertyChange('cidrBlock', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Availability Zone</FormLabel>
+        <Input
+          value={props.availabilityZone}
+          onChange={(e) => handlePropertyChange('availabilityZone', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Public Subnet</FormLabel>
+        <Switch
+          isChecked={props.isPublic}
+          onChange={(e) => handlePropertyChange('isPublic', e.target.checked)}
+        />
+      </FormControl>
+    </VStack>
+  );
+
+  const renderRoute53Properties = (props: Route53Properties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>Record Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Domain Name</FormLabel>
+        <Input
+          value={props.domainName}
+          onChange={(e) => handlePropertyChange('domainName', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Record Type</FormLabel>
+        <Select
+          value={props.recordType}
+          onChange={(e) => handlePropertyChange('recordType', e.target.value)}
+        >
+          <option value="A">A</option>
+          <option value="AAAA">AAAA</option>
+          <option value="CNAME">CNAME</option>
+          <option value="MX">MX</option>
+          <option value="TXT">TXT</option>
+          <option value="NS">NS</option>
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>TTL (seconds)</FormLabel>
+        <NumberInput
+          value={props.ttl}
+          onChange={(_, value) => handlePropertyChange('ttl', value)}
+          min={0}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+    </VStack>
+  );
+
+  const renderLoadBalancerProperties = (props: LoadBalancerProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>Load Balancer Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Type</FormLabel>
+        <Select
+          value={props.type}
+          onChange={(e) => handlePropertyChange('type', e.target.value)}
+        >
+          <option value="application">Application Load Balancer</option>
+          <option value="network">Network Load Balancer</option>
+          <option value="classic">Classic Load Balancer</option>
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Scheme</FormLabel>
+        <Select
+          value={props.scheme}
+          onChange={(e) => handlePropertyChange('scheme', e.target.value)}
+        >
+          <option value="internet-facing">Internet Facing</option>
+          <option value="internal">Internal</option>
+        </Select>
+      </FormControl>
+    </VStack>
+  );
+
+  const renderIAMRoleProperties = (props: IAMRoleProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>Role Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Service</FormLabel>
+        <Input
+          value={props.service}
+          onChange={(e) => handlePropertyChange('service', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Trust Relationship</FormLabel>
+        <Textarea
+          value={props.trustRelationship}
+          onChange={(e) => handlePropertyChange('trustRelationship', e.target.value)}
+        />
+      </FormControl>
+    </VStack>
+  );
+
+  const renderKMSKeyProperties = (props: KMSKeyProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>Key Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Key Usage</FormLabel>
+        <Select
+          value={props.keyUsage}
+          onChange={(e) => handlePropertyChange('keyUsage', e.target.value)}
+        >
+          <option value="ENCRYPT_DECRYPT">Encrypt/Decrypt</option>
+          <option value="SIGN_VERIFY">Sign/Verify</option>
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Key Spec</FormLabel>
+        <Input
+          value={props.keySpec}
+          onChange={(e) => handlePropertyChange('keySpec', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Key Rotation</FormLabel>
+        <Switch
+          isChecked={props.rotation}
+          onChange={(e) => handlePropertyChange('rotation', e.target.checked)}
+        />
+      </FormControl>
+    </VStack>
+  );
+
+  const renderEFSProperties = (props: EFSProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>File System Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Performance Mode</FormLabel>
+        <Select
+          value={props.performanceMode}
+          onChange={(e) => handlePropertyChange('performanceMode', e.target.value)}
+        >
+          <option value="generalPurpose">General Purpose</option>
+          <option value="maxIO">Max I/O</option>
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Throughput Mode</FormLabel>
+        <Select
+          value={props.throughputMode}
+          onChange={(e) => handlePropertyChange('throughputMode', e.target.value)}
+        >
+          <option value="bursting">Bursting</option>
+          <option value="provisioned">Provisioned</option>
+        </Select>
+      </FormControl>
+      {props.throughputMode === 'provisioned' && (
+        <FormControl>
+          <FormLabel>Provisioned Throughput (MiB/s)</FormLabel>
+          <NumberInput
+            value={props.provisionedThroughput}
+            onChange={(_, value) => handlePropertyChange('provisionedThroughput', value)}
+            min={0}
+          >
+            <NumberInputField />
+          </NumberInput>
+        </FormControl>
+      )}
+    </VStack>
+  );
+
+  const renderSQSProperties = (props: SQSProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>Queue Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Queue Type</FormLabel>
+        <Select
+          value={props.queueType}
+          onChange={(e) => handlePropertyChange('queueType', e.target.value)}
+        >
+          <option value="standard">Standard Queue</option>
+          <option value="fifo">FIFO Queue</option>
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Delay Seconds</FormLabel>
+        <NumberInput
+          value={props.delaySeconds}
+          onChange={(_, value) => handlePropertyChange('delaySeconds', value)}
+          min={0}
+          max={900}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Message Retention Period (seconds)</FormLabel>
+        <NumberInput
+          value={props.retentionPeriod}
+          onChange={(_, value) => handlePropertyChange('retentionPeriod', value)}
+          min={60}
+          max={1209600}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Visibility Timeout (seconds)</FormLabel>
+        <NumberInput
+          value={props.visibilityTimeout}
+          onChange={(_, value) => handlePropertyChange('visibilityTimeout', value)}
+          min={0}
+          max={43200}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </FormControl>
+    </VStack>
+  );
+
+  const renderSNSProperties = (props: SNSProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>Topic Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Protocol</FormLabel>
+        <Select
+          value={props.protocol}
+          onChange={(e) => handlePropertyChange('protocol', e.target.value)}
+        >
+          <option value="email">Email</option>
+          <option value="sms">SMS</option>
+          <option value="http">HTTP</option>
+          <option value="https">HTTPS</option>
+          <option value="lambda">Lambda</option>
+          <option value="sqs">SQS</option>
+        </Select>
+      </FormControl>
+    </VStack>
+  );
+
+  const renderAPIGatewayProperties = (props: APIGatewayProperties) => (
+    <VStack spacing={4} align="stretch">
+      <FormControl>
+        <FormLabel>API Name</FormLabel>
+        <Input
+          value={props.name}
+          onChange={(e) => handlePropertyChange('name', e.target.value)}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Endpoint Type</FormLabel>
+        <Select
+          value={props.endpointType}
+          onChange={(e) => handlePropertyChange('endpointType', e.target.value)}
+        >
+          <option value="edge">Edge Optimized</option>
+          <option value="regional">Regional</option>
+          <option value="private">Private</option>
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>API Type</FormLabel>
+        <Select
+          value={props.apiType}
+          onChange={(e) => handlePropertyChange('apiType', e.target.value)}
+        >
+          <option value="rest">REST API</option>
+          <option value="http">HTTP API</option>
+          <option value="websocket">WebSocket API</option>
+        </Select>
+      </FormControl>
+    </VStack>
+  );
+
   const renderProperties = () => {
     switch (elementType) {
       case 'EC2 Instance':
         return renderEC2Properties(properties as EC2Properties);
+      case 'Auto Scaling Group':
+        return renderAutoScalingGroupProperties(properties as AutoScalingGroupProperties);
+      case 'Lambda Function':
+        return renderLambdaProperties(properties as LambdaProperties);
       case 'RDS Database':
         return renderRDSProperties(properties as RDSProperties);
+      case 'DynamoDB Table':
+        return renderDynamoDBProperties(properties as DynamoDBProperties);
+      case 'ElastiCache Cluster':
+        return renderElastiCacheProperties(properties as ElastiCacheProperties);
       case 'VPC':
         return renderVPCProperties(properties as VPCProperties);
+      case 'Subnet':
+        return renderSubnetProperties(properties as SubnetProperties);
+      case 'Route 53':
+        return renderRoute53Properties(properties as Route53Properties);
+      case 'Load Balancer':
+        return renderLoadBalancerProperties(properties as LoadBalancerProperties);
       case 'Security Group':
         return renderSecurityGroupProperties(properties as SecurityGroupProperties);
+      case 'IAM Role':
+        return renderIAMRoleProperties(properties as IAMRoleProperties);
+      case 'KMS Key':
+        return renderKMSKeyProperties(properties as KMSKeyProperties);
       case 'S3 Bucket':
         return renderS3Properties(properties as S3Properties);
+      case 'EFS File System':
+        return renderEFSProperties(properties as EFSProperties);
+      case 'SQS Queue':
+        return renderSQSProperties(properties as SQSProperties);
+      case 'SNS Topic':
+        return renderSNSProperties(properties as SNSProperties);
       case 'Internet Gateway':
         return renderInternetGatewayProperties(properties as InternetGatewayProperties);
+      case 'API Gateway':
+        return renderAPIGatewayProperties(properties as APIGatewayProperties);
       default:
         return null;
     }

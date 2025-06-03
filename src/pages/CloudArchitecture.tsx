@@ -12,18 +12,15 @@ import ReactFlow, {
     useNodesState,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { CloudComponentsSidebar } from '../components/CloudComponentsSidebar';
+import CloudComponentsSidebar from '../components/CloudComponentsSidebar';
 import CloudEdge from '../components/CloudEdge';
 import DesignManager from '../components/DesignManager';
 import IsometricNode from '../components/IsometricNode';
 import PropertiesPanel from '../components/PropertiesPanel';
-import SettingsMenu from '../components/SettingsMenu';
 import type { CloudDesign } from '../types/CloudDesign';
 import { STORAGE_KEYS } from '../types/CloudDesign';
 import type { ElementProperties } from '../types/ElementProperties';
 import { getDefaultProperties } from '../types/ElementProperties';
-import type { CloudProviderSettings } from '../types/Settings';
-import { defaultSettings } from '../types/Settings';
 
 const nodeTypes = {
   default: IsometricNode,
@@ -35,12 +32,126 @@ const edgeTypes = {
 
 // Define valid connections between different AWS services
 const validConnections: Record<string, string[]> = {
-  'EC2 Instance': ['RDS Database', 'S3 Bucket', 'Security Group', 'Internet Gateway'],
-  'RDS Database': ['Security Group'],
-  'VPC': ['EC2 Instance', 'RDS Database', 'Security Group', 'Internet Gateway'],
-  'Security Group': ['EC2 Instance', 'RDS Database'],
-  'S3 Bucket': ['EC2 Instance'],
-  'Internet Gateway': ['EC2 Instance', 'VPC'],
+  'EC2 Instance': [
+    'RDS Database',
+    'DynamoDB Table',
+    'ElastiCache Cluster',
+    'S3 Bucket',
+    'EFS File System',
+    'Security Group',
+    'Load Balancer',
+    'SQS Queue',
+    'SNS Topic',
+    'Lambda Function',
+    'API Gateway',
+    'Internet Gateway'
+  ],
+  'Auto Scaling Group': [
+    'Load Balancer',
+    'Security Group',
+    'SNS Topic',
+    'EC2 Instance'
+  ],
+  'Lambda Function': [
+    'DynamoDB Table',
+    'S3 Bucket',
+    'SQS Queue',
+    'SNS Topic',
+    'API Gateway',
+    'Security Group',
+    'KMS Key'
+  ],
+  'RDS Database': [
+    'Security Group',
+    'KMS Key',
+    'Subnet'
+  ],
+  'DynamoDB Table': [
+    'Lambda Function',
+    'EC2 Instance',
+    'KMS Key'
+  ],
+  'ElastiCache Cluster': [
+    'Security Group',
+    'Subnet'
+  ],
+  'VPC': [
+    'Subnet',
+    'Internet Gateway',
+    'Security Group',
+    'EC2 Instance',
+    'RDS Database',
+    'ElastiCache Cluster',
+    'Load Balancer'
+  ],
+  'Subnet': [
+    'EC2 Instance',
+    'RDS Database',
+    'ElastiCache Cluster',
+    'Load Balancer',
+    'VPC'
+  ],
+  'Route 53': [
+    'Load Balancer',
+    'API Gateway',
+    'S3 Bucket'
+  ],
+  'Load Balancer': [
+    'EC2 Instance',
+    'Auto Scaling Group',
+    'Security Group',
+    'Subnet'
+  ],
+  'Security Group': [
+    'EC2 Instance',
+    'RDS Database',
+    'ElastiCache Cluster',
+    'Lambda Function',
+    'Load Balancer'
+  ],
+  'IAM Role': [
+    'EC2 Instance',
+    'Lambda Function',
+    'API Gateway'
+  ],
+  'KMS Key': [
+    'S3 Bucket',
+    'RDS Database',
+    'DynamoDB Table',
+    'SQS Queue',
+    'SNS Topic',
+    'EFS File System'
+  ],
+  'S3 Bucket': [
+    'EC2 Instance',
+    'Lambda Function',
+    'KMS Key'
+  ],
+  'EFS File System': [
+    'EC2 Instance',
+    'Lambda Function',
+    'KMS Key'
+  ],
+  'SQS Queue': [
+    'EC2 Instance',
+    'Lambda Function',
+    'SNS Topic',
+    'KMS Key'
+  ],
+  'SNS Topic': [
+    'Lambda Function',
+    'SQS Queue',
+    'EC2 Instance'
+  ],
+  'Internet Gateway': [
+    'VPC',
+    'EC2 Instance'
+  ],
+  'API Gateway': [
+    'Lambda Function',
+    'EC2 Instance',
+    'IAM Role'
+  ]
 };
 
 const initialNodes: Node[] = [
@@ -209,7 +320,6 @@ export const CloudArchitecture = () => {
   const [isometric, setIsometric] = useState(false);
   const [currentDesignId, setCurrentDesignId] = useState<string>();
   const [currentVersion, setCurrentVersion] = useState(1);
-  const [settings, setSettings] = useState<CloudProviderSettings>(defaultSettings);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const toast = useToast();
@@ -391,7 +501,6 @@ export const CloudArchitecture = () => {
                   onLoadDesign={handleLoadDesign}
                   currentDesignId={currentDesignId}
                 />
-                <SettingsMenu onSettingsChange={setSettings} />
               </HStack>
               <Button
                 leftIcon={isometric ? <FaSquare /> : <FaCube />}
@@ -412,7 +521,7 @@ export const CloudArchitecture = () => {
               </Button>
             </VStack>
           </Box>
-          <CloudComponentsSidebar settings={settings} />
+          <CloudComponentsSidebar />
         </Box>
         <Box flex="1" position="relative">
           <ReactFlow

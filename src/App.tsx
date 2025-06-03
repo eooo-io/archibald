@@ -14,7 +14,6 @@ function App() {
           <Routes>
             <Route path="/" element={<CloudArchitecture />} />
             <Route path="/components" element={<div>Components Page</div>} />
-            <Route path="/settings" element={<div>Settings Page</div>} />
           </Routes>
         </Router>
       </ChakraProvider>
